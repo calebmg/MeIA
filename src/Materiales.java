@@ -47,7 +47,7 @@ public class Materiales extends javax.swing.JFrame {
      */
     DefaultListModel x = new DefaultListModel();
     public Materiales() {
-        File Archivo = new File("C:\\MEIA\\BitacoraMateriales.txt");
+        File Archivo = new File("C:\\MEIA\\Materiales.txt");
         
        
         initComponents();
@@ -55,21 +55,11 @@ public class Materiales extends javax.swing.JFrame {
         jList1.setModel(x);
         if(Archivo.exists()==true)
         {
-        ArrayList<Usuario> Usuarios = Obtener_Datos_("C:\\MEIA\\BitacoraMateriales.txt","");
+        ArrayList<NodoMat> LNodos = ListadoNodos("C:\\MEIA\\Materiales.txt","");
         
-        for(Usuario item :Usuarios)
+        for(NodoMat item : LNodos)
         {
-            x.addElement(item);
-        }
-        }
-        File Archivo1 = new File("C:\\MEIA\\Materiales.txt");
-        
-        if(Archivo1.exists()==true)
-        {
-        ArrayList<Usuario> Usuarios = Obtener_Datos_("C:\\MEIA\\Materiales.txt","");
-        for(Usuario item :Usuarios)
-        {
-            x.addElement(item);
+            x.addElement(item.Nombre);
         }
         }
     }
@@ -778,35 +768,36 @@ private void ActualizarLinea(String Actualizar, String cambio, String path) thro
 }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Usuario user= new Usuario();
-        user.nombre = TextMaterial.getText();
-        File Archivo = new File("C:\\MEIA\\BitacoraMateriales.txt");
-        
+        File Archivo = new File("C:\\MEIA\\Materiales.txt");
+        NodoMat MatMod = new NodoMat();
+        MatMod.Nombre = TextMaterial.getText();
        
 //        initComponents();
 //         
 //        jList1.setModel(x);
         if(Archivo.exists()==true)
         {
-        ArrayList<Usuario> Usuarios = Obtener_Datos_("C:\\MEIA\\BitacoraMateriales.txt","");
+        ArrayList<NodoMat> Listado = ListadoNodos("C:\\MEIA\\Materiales.txt","");
         
-        for(Usuario item :Usuarios)
+        for(NodoMat item :Listado)
         {
-            if(item.nombre.equals(user.nombre))
+            if(item.Nombre.equals(MatMod.Nombre))
             {
                 try {
-                    ActualizarLinea(item.nombre+","+item.tipo+","+item.path_foto+","+item.degradarse+","+item.usuario
-                            +","+item.Fecha_Creacion+","+item.status,
+                    String Viejo = Integer.toString(item.Posicion) + "," + Integer.toString(item.PIzq) + "," + Integer.toString(item.PDer) + "," + 
+                            item.Nombre+","+item.Tipo+","+item.RFoto +","+item.Tiempo +"," + item.Usuario +","+item.Fecha+","+item.Status;
+                    String Nuevo = Integer.toString(item.Posicion) + "," + Integer.toString(item.PIzq) + "," + Integer.toString(item.PDer) + "," +
                             TextMaterial.getText()+","+TextTipo.getText()+","+DireccionFotograficaLabel.getText()+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
                                     ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                                    Comboaño.getSelectedItem()+","+TextStatus.getText(),"C:\\MEIA\\BitacoraMateriales.txt");
+                                    Comboaño.getSelectedItem()+","+TextStatus.getText();
+                    ActualizarLinea(Viejo, Nuevo,"C:\\MEIA\\Materiales.txt");
                 } catch (IOException ex) {
                     Logger.getLogger(Materiales.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
         }
-        File Archivo1 = new File("C:\\MEIA\\Materiales.txt");
+        /*File Archivo1 = new File("C:\\MEIA\\Materiales.txt");
         
         if(Archivo1.exists()==true)
         {
@@ -823,7 +814,7 @@ private void ActualizarLinea(String Actualizar, String cambio, String path) thro
                     Logger.getLogger(Materiales.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        }
+        }*/
           TextMaterial.setText(null);
         TextoUsuario.setText(null);
         TextTipo.setText(null);
