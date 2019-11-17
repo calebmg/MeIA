@@ -127,9 +127,7 @@ public class Materiales extends javax.swing.JFrame {
         {
             
             return cant_max;
-        }
-        
-        
+        } 
     }
     public ArrayList<Usuario> Obtener_Datos_(String strPath,String strError)
     {
@@ -190,10 +188,95 @@ public class Materiales extends javax.swing.JFrame {
             
             return Usuarios;
         }
-        
-        
-}
+    }
     
+    public class NodoMat{
+        public int Posicion;
+        public int PIzq;
+        public int PDer;
+        public NodoMat Izquierdo;
+        public NodoMat Derecho;
+        public String Nombre;
+        public String Tipo;
+        public String RFoto;
+        public String Tiempo;
+        public String Usuario;
+        public String Fecha;
+        public String Status;
+        
+        public boolean EsHoja(){
+            if((Izquierdo == null) && (Derecho == null)){return true;}
+            else {return false;}
+        }
+        
+        public void LlenarNodoMat(String Props){
+            String[] Separados = Props.split(",");
+            this.Posicion = Integer.parseInt(Separados[0]);
+            this.PIzq = Integer.parseInt(Separados[1]);
+            this.PDer = Integer.parseInt(Separados[2]);
+            this.Nombre = Separados[3];
+            this.Tipo = Separados[4];
+            this.RFoto = Separados[5];
+            this.Tiempo = Separados[6];
+            this.Usuario = Separados[7];
+            this.Fecha = Separados[8];
+            this.Status = Separados[9];
+        }
+    }
+    
+    
+    public ArrayList<NodoMat> ListadoNodos(String strPath,String strError)
+    {
+        ArrayList<NodoMat> Listado = new ArrayList<NodoMat>();
+        File Archivo = new File(strPath);
+        if(Archivo.exists()==true)
+        {
+            FileReader LecturaArchivo;
+            
+            try {
+                LecturaArchivo = new FileReader(Archivo);
+                
+                BufferedReader LeerArchivo = new BufferedReader(LecturaArchivo);
+                
+                String Linea="";
+                try {
+                    Linea=LeerArchivo.readLine();
+                    String[] Split;
+                    
+                    
+                    while(Linea != null)
+                    {
+                        if(!"".equals(Linea))
+                        {
+                            NodoMat Material = new NodoMat();
+                            Material.LlenarNodoMat(Linea);
+                            Listado.add(Material);
+                        }
+                        Linea=LeerArchivo.readLine();
+                    }
+                    //Aqui ya se puede hacer comparaciones
+
+                    LecturaArchivo.close();
+                    LeerArchivo.close();
+                    
+                    strError="";
+                    return Listado;
+                    
+                } catch (IOException ex) {
+                    strError= ex.getMessage();
+                    return Listado;
+                }
+            } catch (FileNotFoundException ex) {
+                strError= ex.getMessage();
+                return Listado;
+            }            
+        }
+        else
+        {
+            
+            return Listado;
+        }
+    }
     public List<String> BuscarSecuencial() throws IOException
     {
         List<String> Respuesta = new ArrayList<>();
@@ -537,15 +620,22 @@ public class Materiales extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ComboMesActionPerformed
 
+    
+    
     private void BotonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertarActionPerformed
         Usuario user= new Usuario();
         user.nombre = TextMaterial.getText();
      
         Date fecha = new Date();
-        File file = new File("C:\\MEIA\\BitacoraMateriales.txt");
+        File file = new File("C:\\MEIA\\Materiales.txt");
+        File fdesc = new File("C:\\MEIA\\Desc_Materiales.txt");
         FileWriter escritor;
         PrintWriter imprimir;
-
+        NodoMat NMat = new NodoMat();
+        NMat.Nombre = TextMaterial.getText();  NMat.Tipo = TextTipo.getText();    NMat.RFoto = DireccionFotograficaLabel.getText();
+        NMat.Tiempo = TextDeg.getText();    NMat.Usuario = TextoUsuario.getText();
+        NMat.Fecha = ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+ Comboaño.getSelectedItem();
+        NMat.Status = TextStatus.getText(); NMat.PIzq = -1; NMat.PDer = -1;
         String origenPath = DireccionFotograficaLabel.getText();
         Path origen = Paths.get(origenPath);
         Path destino = Paths.get("C:\\MEIA\\Fotografia");
@@ -556,30 +646,29 @@ public class Materiales extends javax.swing.JFrame {
         }
         //Foto
         String pathFoto = "C:\\MEIA\\Imagenes\\" + origen.getFileName();
+        //SI MATERIALES.TXT NO EXISTE  
         if(!file.exists())
         {
             try{
-                //Para insertar en bitacora
+                //Para insertar en Materiales.txt
                 file.createNewFile();
                 escritor = new FileWriter(file,true);
                 imprimir = new PrintWriter(escritor,true);
-                imprimir.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
+                imprimir.println("0,-1,-1," + TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
                         ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
                         Comboaño.getSelectedItem()+","+TextStatus.getText());
                 
                 //Creacion de descriptor
-                File fileDesc = new File("C:\\MEIA\\Desc_BitacoraMateriales.txt");
+                File fileDesc = new File("C:\\MEIA\\Desc_Materiales.txt");
                 FileWriter escritor2 = new FileWriter(fileDesc,true);
                 PrintWriter linea = new PrintWriter(escritor2);
                 
-                linea.println("Nombre:BitacoraMateriales.txt");
-                linea.println("ArchivoRelacionado:Materiales.txt");
+                linea.println("Nombre:Materiales.txt");
                 linea.println("Fecha_Modificacion:"+fecha);
                 linea.println("Creador:"+TextoUsuario.getText());
                 linea.println("Total_Registros:1");
                 linea.println("Registros_Activos:1");
                 linea.println("Registros_Inactivos:0");
-                linea.println("Maximo_Registros:8");
                 
                 imprimir.close();
                 escritor2.close();
@@ -588,239 +677,50 @@ public class Materiales extends javax.swing.JFrame {
                 
             }catch(IOException ex){ex.printStackTrace();}
             
-        }
+        }//MATERIALES.TXT SI EXISTE
         else{
-            try{
-                
-                if(Insertar())
-                {
-                    
-                    escritor = new FileWriter(file,true);
-                    imprimir = new PrintWriter(escritor,true);
-                    ArrayList<Usuario> escribir = Obtener_Datos_("C:\\MEIA\\BitacoraMateriales.txt","");
-                    int _1_ = 0;
-                    int _2_ = 0;
-                    if(escribir.contains(user)){
-                        int index = escribir.indexOf(user);
-                        escribir.remove(index);
-                        escribir.add(index, user);}
-                    String Todo = "";
-                    for(int i =0; i < escribir.size(); i++)
-                    {
-                        Todo = Todo + escribir.get(i) + "\n";
-                    }
-                    imprimir.println(Todo);
-                    imprimir.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                        ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                        Comboaño.getSelectedItem()+","+TextStatus.getText());
-                    escritor.close();
-                    imprimir.close();
-                    String admin = "";
-                    for (Usuario item : escribir)
-                    {
-                        
-                        if(item.status.equals("1"))
-                        {
-                            _1_++;
-                            
-                        }
-                        else
-                        {
-                            _2_++;
-                        }
-                    }
-                    ArrayList<Usuario> escribir_U = Obtener_Datos_("C:\\MEIA\\Materiales.txt","");
-                    
-                    File fileDesc = new File("C:\\MEIA\\Desc_BitacoraMateriales.txt");
-                    FileWriter escritor2 = new FileWriter(fileDesc);
-                    PrintWriter linea = new PrintWriter(escritor2);
-                    
-                    linea.println("Nombre:BitacoraMateriales.txt");
-                    linea.println("ArchivoRelacionado:Materiales.txt");
-                    linea.println("Fecha_Modificacion:"+fecha);
-                    linea.println("Creador:"+TextoUsuario.getText());
-                    linea.println("Total_Registros:es"+escribir.size());
-                    linea.println("Registros_Activos:"+_1_);
-                    linea.println("Registros_Inactivos:"+_2_);
-                    linea.println("Maximo_Registros:8");
-                    
-                    imprimir.close();
-                    escritor2.close();
-                    linea.close();
-                    escritor.close();
-                }
-                else
-                {
-                    File ComprobarUsuario = new File("C:\\MEIA\\Materiales.txt");
-                    //Compruevo si existe usuario
-                    if(!ComprobarUsuario.exists())
-                    {
-                        //Crear el archivo usuairo
-                        ComprobarUsuario.createNewFile();
-                        ArrayList<Usuario> escribir = Obtener_Datos_("C:\\MEIA\\BitacoraMateriales.txt","");
-                        
-                        FileWriter escribirArchivo = new FileWriter(ComprobarUsuario,true);                //Pasar los datos de la bitacora al archivo usuario
-                        PrintWriter ImprimirArchivo = new PrintWriter(escribirArchivo,true);
-                        if(escribir.contains(user)){
-                            int index = escribir.indexOf(user);
-                            escribir.remove(index);
-                            escribir.add(index, user);}
-                        
-                        for (Usuario item : escribir)
-                            
-                        {
-                            
-                            ImprimirArchivo.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                        ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                        Comboaño.getSelectedItem()+","+TextStatus.getText());
-                        }
-                        
-                        escritor = new FileWriter(file);
-                        imprimir = new PrintWriter(escritor);
-                        imprimir.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                        ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                        Comboaño.getSelectedItem()+","+TextStatus.getText());
-                        escritor.close();
-                        imprimir.close();
-                        int _1_ = 0;
-                        int _2_ = 0;
-                        ArrayList<Usuario> escribir_U = Obtener_Datos_("C:\\MEIA\\Materiales.txt","");
-                        String admin = "";
-                        for (Usuario item : escribir)
-                        {
-                            
-                            if(item.status.equals("1"))
-                            {
-                                _1_++;
-                                
-                            }
-                            else
-                            {
-                                _2_++;
-                            }
-                        }
-                        
-                        //creacion Descriptor
-                        File CrearDesc = new File("C:\\MEIA\\Desc_Materiales.txt");
-                        FileWriter escritor2 = new FileWriter(CrearDesc);
-                        PrintWriter linea = new PrintWriter(escritor2);
-                        
-                        linea.println("Nombre:Usuario.txt");
-                        linea.println("ArchivoRelacionado:BitacoraMateriales.txt");
-                        linea.println("FechaCreacion:"+fecha);
-                        linea.println("Creador:"+TextoUsuario.getText());  //Cambiar esto por el usuario administrador
-                        linea.println("Total_Registros:"+escribir.size()); // Agregar la cantidad en la bitacora
-                        linea.println("Registros_Activos:"+_1_);  // Buscar los que sean uno en la bitacora
-                        linea.println("Registros_Inactivos:"+_2_); // Buscar los que sean cero en la bitacora
-                        
-                        linea.close();
-                        escritor2.close();
-                        escribirArchivo.close();
-                        ImprimirArchivo.close();
-                        
-                        File fileDesc = new File("C:\\MEIA\\Desc_BitacoraMateriales.txt");
-                        FileWriter escritor3 = new FileWriter(fileDesc);
-                        PrintWriter linea2 = new PrintWriter(escritor3);
-                        
-                        linea2.println("Nombre:BitacoraMateriales.txt");
-                        linea2.println("ArchivoRelacionado:Materiales.txt");
-                        linea2.println("Fecha_Modificacion:"+fecha);
-                        linea2.println("Creador:"+TextoUsuario.getText());
-                        linea2.println("Total_Registros:1");
-                        linea2.println("Registros_Activos:1");
-                        linea2.println("Registros_Inactivos:0");
-                        linea2.println("Maximo_Registros:8");
-                        
-                        escritor3.close();
-                        linea2.close();
-                        
-                    }
-                    else{
-                        ArrayList<Usuario> escribir = Obtener_Datos_("C:\\MEIA\\BitacoraMateriales.txt","");
-                        
-                        FileWriter escribirArchivo = new FileWriter(ComprobarUsuario,true);                //Pasar los datos de la bitacora al archivo usuario
-                        PrintWriter ImprimirArchivo = new PrintWriter(escribirArchivo,true);
-                        if(escribir.contains(user)){
-                            int index = escribir.indexOf(user);
-                            escribir.remove(index);
-                            escribir.add(index, user);}
-                        
-                        for (Usuario item : escribir)
-                            
-                        {
-                            
-                            ImprimirArchivo.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                        ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                        Comboaño.getSelectedItem()+","+TextStatus.getText());
-                        }
-
-                        escritor = new FileWriter(file);
-                        imprimir = new PrintWriter(escritor);
-                        imprimir.println(TextMaterial.getText()+","+TextTipo.getText()+","+pathFoto+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                        ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                        Comboaño.getSelectedItem()+","+TextStatus.getText());
-                        escritor.close();
-                        imprimir.close();
-                        escribirArchivo.close();
-                        ImprimirArchivo.close();
-                        
-                        int _1_ = 0;
-                        int _2_ = 0;
-                        ArrayList<Usuario> escribir_U = Obtener_Datos_("C:\\MEIA\\Materiales.txt","");
-                        String admin = "";
-                        for (Usuario item : escribir)
-                        {
-                            
-                            if(item.status.equals("1"))
-                            {
-                                _1_++;
-                                
-                            }
-                            else
-                            {
-                                _2_++;
-                            }
-                        }
-                        
-                        //creacion Descriptor
-                        File CrearDesc = new File("C:\\MEIA\\Desc_Materiales.txt");
-                        FileWriter escritor2 = new FileWriter(CrearDesc,true);
-                        PrintWriter linea = new PrintWriter(escritor2);
-                        
-                        linea.println("Nombre:Desc_Materiales.txt");
-                        linea.println("ArchivoRelacionado:BitacoraMateriales.txt");
-                        linea.println("FechaCreacion:"+fecha);
-                        linea.println("Creador:"+TextoUsuario.getText());  //Cambiar esto por el usuario administrador
-                        linea.println("Total_Registros:"+escribir.size()); // Agregar la cantidad en la bitacora
-                        linea.println("Registros_Activos:"+_1_);  // Buscar los que sean uno en la bitacora
-                        linea.println("Registros_Inactivos:"+_2_); // Buscar los que sean cero en la bitacora
-                        
-                        linea.close();
-                        escritor2.close();
-                        escribirArchivo.close();
-                        ImprimirArchivo.close();
-                        
-                        File fileDesc = new File("C:\\MEIA\\Desc_BitacoraMateriales.txt");
-                        FileWriter escritor3 = new FileWriter(fileDesc);
-                        PrintWriter linea2 = new PrintWriter(escritor3);
-                        
-                        linea2.println("Nombre:BitacoraMateriales.txt");
-                        linea2.println("ArchivoRelacionado:Materiales.txt");
-                        linea2.println("Fecha_Modificacion:"+fecha);
-                        linea2.println("Creador:"+TextoUsuario.getText());
-                        linea2.println("Total_Registros:1");
-                        linea2.println("Registros_Activos:1");
-                        linea2.println("Registros_Inactivos:0");
-                        linea2.println("Maximo_Registros:8");
-                        
-                        escritor3.close();
-                        linea2.close();
-                        //Transferir los datos de la bitacora a usuario
+            ArrayList<NodoMat> ListadoViejo = ListadoNodos("C:\\MEIA\\Materiales.txt","");
+            int PNuevo = ListadoViejo.size();
+            if(!ListadoViejo.contains(NMat)){//Si no contiene nuevo
+                int Posicion = 0;
+                int Ultima = 0;
+                while(Posicion >= 0){
+                    if( NMat.Nombre.compareTo(ListadoViejo.get(Posicion).Nombre) < 0 ){ //NMat es menor a actual
+                        Ultima = Posicion;
+                        Posicion = ListadoViejo.get(Posicion).PIzq;
+                    }else if (NMat.Nombre.compareTo(ListadoViejo.get(Posicion).Nombre) > 0){
+                        Ultima = Posicion;
+                        Posicion = ListadoViejo.get(Posicion).PDer;
                     }
                 }
+                if(NMat.Nombre.compareTo(ListadoViejo.get(Ultima).Nombre) < 0) //Nuevo es menor a ultima
+                { ListadoViejo.get(Ultima).PIzq = PNuevo; }
+                else if(NMat.Nombre.compareTo(ListadoViejo.get(Ultima).Nombre) > 0)
+                { ListadoViejo.get(Ultima).PDer = PNuevo; }
+                NMat.Posicion = PNuevo;
+                ListadoViejo.add(NMat);
+             try
+             {
+                file.delete(); file.createNewFile();
+                escritor = new FileWriter(file,true); imprimir = new PrintWriter(escritor, true);
+                for(NodoMat i : ListadoViejo)
+                {
+                    String Props = Integer.toString(i.Posicion) + "," + Integer.toString(i.PIzq) + "," + Integer.toString(i.PDer)+ "," +
+                            i.Nombre + "," + i.Tipo + "," + i.RFoto + "," + i.Tiempo + "," + i.Usuario + "," + i.Fecha + "," + i.Status;
+                    imprimir.println(Props);
+                }
+                escritor.close(); imprimir.close();
+                fdesc.delete(); fdesc.createNewFile();
+                FileWriter escritor2 = new FileWriter(fdesc,true);
+                PrintWriter linea = new PrintWriter(escritor2);
+                linea.println("Nombre:Materiales.txt");
+                linea.println("Fecha_Modificacion:"+fecha);
+                linea.println("Creador:"+TextoUsuario.getText());
+                linea.println("Total_Registros:" + Integer.toString(ListadoViejo.size()));
                 
-            }catch(IOException ex){ex.printStackTrace();}
-            
+                escritor2.close(); linea.close();
+             }catch(IOException ex){ex.printStackTrace();}
+            }
         }
         TextMaterial.setText(null);
         TextoUsuario.setText(null);
