@@ -12,8 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
 import java.nio.file.*;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -194,6 +193,7 @@ public class Materiales extends javax.swing.JFrame {
         public String Fecha;
         public String Status;
         
+        
         public boolean EsHoja(){
             if((Izquierdo == null) && (Derecho == null)){return true;}
             else {return false;}
@@ -259,6 +259,7 @@ public class Materiales extends javax.swing.JFrame {
             } catch (FileNotFoundException ex) {
                 strError= ex.getMessage();
                 return Listado;
+                
             }            
         }
         else
@@ -650,7 +651,29 @@ public class Materiales extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ComboMesActionPerformed
 
-    
+    public boolean moveFile(String fromFile, String toFile) {
+        File origin = new File(fromFile);
+        File destination = new File(toFile);
+        if (origin.exists()) {
+            try {
+                InputStream in = new FileInputStream(origin);
+                OutputStream out = new FileOutputStream(destination);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+                return origin.delete();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     
     private void BotonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertarActionPerformed
         Usuario user= new Usuario();
@@ -661,11 +684,6 @@ public class Materiales extends javax.swing.JFrame {
         File fdesc = new File("C:\\MEIA\\Desc_Materiales.txt");
         FileWriter escritor;
         PrintWriter imprimir;
-        NodoMat NMat = new NodoMat();
-        NMat.Nombre = TextMaterial.getText();  NMat.Tipo = TextTipo.getText();    NMat.RFoto = DireccionFotograficaLabel.getText();
-        NMat.Tiempo = TextDeg.getText();    NMat.Usuario = TextoUsuario.getText();
-        NMat.Fecha = ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+ Comboaño.getSelectedItem();
-        NMat.Status = TextStatus.getText(); NMat.PIzq = -1; NMat.PDer = -1;
         String origenPath = DireccionFotograficaLabel.getText();
         Path origen = Paths.get(origenPath);
         Path destino = Paths.get("C:\\MEIA\\Fotografia");
@@ -676,6 +694,12 @@ public class Materiales extends javax.swing.JFrame {
         }
         //Foto
         String pathFoto = "C:\\MEIA\\Imagenes\\" + origen.getFileName();
+        NodoMat NMat = new NodoMat();
+        NMat.Nombre = TextMaterial.getText();  NMat.Tipo = TextTipo.getText();    NMat.RFoto = pathFoto;
+        NMat.Tiempo = TextDeg.getText();    NMat.Usuario = TextoUsuario.getText();
+        NMat.Fecha = ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+ Comboaño.getSelectedItem();
+        NMat.Status = TextStatus.getText(); NMat.PIzq = -1; NMat.PDer = -1;
+        
         //SI MATERIALES.TXT NO EXISTE  
         if(!file.exists())
         {
@@ -837,24 +861,7 @@ private void ActualizarLinea(String Actualizar, String cambio, String path) thro
             }
         }
         }
-        /*File Archivo1 = new File("C:\\MEIA\\Materiales.txt");
         
-        if(Archivo1.exists()==true)
-        {
-        ArrayList<Usuario> Usuarios = Obtener_Datos_("C:\\MEIA\\Materiales.txt","");
-        for(Usuario item :Usuarios)
-        {
-            try {
-                    ActualizarLinea(item.nombre+","+item.tipo+","+item.path_foto+","+item.degradarse+","+item.usuario
-                            +","+item.Fecha_Creacion+","+item.status,
-                            TextMaterial.getText()+","+TextTipo.getText()+","+DireccionFotograficaLabel.getText()+"," +TextDeg.getText()+","+TextoUsuario.getText()+","+
-                                    ComboDia.getSelectedItem()+" "+ComboMes.getSelectedItem()+" "+
-                                    Comboaño.getSelectedItem()+","+TextStatus.getText(),"C:\\MEIA\\Materiales.txt");
-                } catch (IOException ex) {
-                    Logger.getLogger(Materiales.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-        }*/
           TextMaterial.setText(null);
         TextoUsuario.setText(null);
         TextTipo.setText(null);
@@ -943,15 +950,15 @@ public class Usuario {
     private javax.swing.JButton BotonInsertar;
     private javax.swing.JTextField BuscadoTF;
     private javax.swing.JTextField BuscarTF;
-    private javax.swing.JComboBox<String> ComboDia;
-    private javax.swing.JComboBox<String> ComboMes;
-    private javax.swing.JComboBox<String> Comboaño;
+    public javax.swing.JComboBox<String> ComboDia;
+    public javax.swing.JComboBox<String> ComboMes;
+    public javax.swing.JComboBox<String> Comboaño;
     private javax.swing.JLabel DireccionFotograficaLabel;
-    private javax.swing.JTextField TextDeg;
-    private javax.swing.JTextField TextMaterial;
-    private javax.swing.JTextField TextStatus;
-    private javax.swing.JTextField TextTipo;
-    private javax.swing.JTextField TextoUsuario;
+    public javax.swing.JTextField TextDeg;
+    public javax.swing.JTextField TextMaterial;
+    public javax.swing.JTextField TextStatus;
+    public javax.swing.JTextField TextTipo;
+    public javax.swing.JTextField TextoUsuario;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -966,7 +973,7 @@ public class Usuario {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
+    public javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables

@@ -6,8 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
 import java.nio.file.*;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -29,36 +28,7 @@ import javax.swing.JOptionPane;
 
 public final class Admin extends javax.swing.JFrame {
 
-//    public void Obtener() 
-// {
-//     String[] Linea = F3.getText().split(",");
-//     String[] fecha = Linea[5].split(" ");
-//    
-//     
-//     ComboDia.setSelectedItem(fecha[0]);
-//     ComboMes.setSelectedItem(fecha[1]);
-//     Comboaño.setSelectedItem(fecha[2]);
-//     DireccionFotograficaLabel.setText(Linea[7]);
-//     
-////     URL url = this.getClass().getResource(Linea[7]);
-////     ImageIcon icon = new ImageIcon(url);
-//     //DireccionFotograficaLabel.setIcon(icon);
-//     TextApellido.setText(Linea[2]);
-//     TextCorreo.setText(Linea[8]);
-//     TextDescripcion.setText(Linea[9]);
-//     TextNombre.setText(Linea[1]);
-//     TextTelefono.setText(Linea[6]);
-//     TextUsuario.setText(Linea[0]);
-//     AESLlave("1234567891234567");
-//     String des = "";
-//        try {
-//            des = Decodificar(Linea[3]);
-//        } catch (Exception ex) {
-//            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//     TextoContraseña.setText(des);
-// }
-//  
+
    
    
     public Admin()  {
@@ -123,6 +93,8 @@ public final class Admin extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         JFoto = new javax.swing.JLabel();
         BotonDonaciones = new javax.swing.JButton();
+        btnRepMateriales = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
 
         F.setText("jLabel14");
 
@@ -228,6 +200,15 @@ public final class Admin extends javax.swing.JFrame {
             }
         });
 
+        btnRepMateriales.setText("Generar");
+        btnRepMateriales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRepMaterialesActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Generar reporte de materiales");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -299,17 +280,22 @@ public final class Admin extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(TextCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(BotonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(CrearUs, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(81, 81, 81)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(BotonInsertar)
-                                .addGap(18, 18, 18)
-                                .addComponent(BotonDonaciones)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(BotonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(CrearUs, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(BotonInsertar)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(BotonDonaciones)))
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnRepMateriales)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -363,7 +349,7 @@ public final class Admin extends javax.swing.JFrame {
                                     .addComponent(Comboaño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 1, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -381,12 +367,20 @@ public final class Admin extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(BotonInsertar)
-                    .addComponent(BotonDonaciones))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(BotonInsertar)
+                            .addComponent(BotonDonaciones))
+                        .addContainerGap(25, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRepMateriales)
+                        .addContainerGap())))
         );
 
         pack();
@@ -413,7 +407,7 @@ public final class Admin extends javax.swing.JFrame {
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = c.doFinal(contraseña.getBytes());
-        String contraseñaEncriptada = new BASE64Encoder().encode(encVal);
+        String contraseñaEncriptada = Base64.getEncoder().encodeToString(encVal);
         return contraseñaEncriptada;
     }
     
@@ -422,7 +416,7 @@ public final class Admin extends javax.swing.JFrame {
         Key key = generarLlave();
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.DECRYPT_MODE, key);
-        byte[] decordedValue = new BASE64Decoder().decodeBuffer(contraseñaEncriptada);
+        byte[] decordedValue = Base64.getDecoder().decode(contraseñaEncriptada);
         byte[] decValue = c.doFinal(decordedValue);
         String ContraseñaDescifrada = new String(decValue);
         return ContraseñaDescifrada;
@@ -1132,6 +1126,12 @@ public final class Admin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_BotonDonacionesActionPerformed
 
+    private void btnRepMaterialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepMaterialesActionPerformed
+        RepMateriales llamar = new RepMateriales();
+        llamar.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRepMaterialesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1215,6 +1215,7 @@ public final class Admin extends javax.swing.JFrame {
     private javax.swing.JTextField TextTelefono;
     private javax.swing.JTextField TextUsuario;
     private javax.swing.JTextField TextoContraseña;
+    private javax.swing.JButton btnRepMateriales;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -1222,6 +1223,7 @@ public final class Admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

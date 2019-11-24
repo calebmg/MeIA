@@ -9,8 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;//
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -67,7 +66,7 @@ public class Ingreso extends javax.swing.JFrame {
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = c.doFinal(contraseña.getBytes());
-        String contraseñaEncriptada = new BASE64Encoder().encode(encVal);
+        String contraseñaEncriptada = Base64.getEncoder().encodeToString(encVal);
         return contraseñaEncriptada;
     }
     
@@ -76,7 +75,7 @@ public class Ingreso extends javax.swing.JFrame {
         Key key = generarLlave();
         Cipher c = Cipher.getInstance(ALGO);
         c.init(Cipher.DECRYPT_MODE, key);
-        byte[] decordedValue = new BASE64Decoder().decodeBuffer(contraseñaEncriptada);
+        byte[] decordedValue = Base64.getDecoder().decode(contraseñaEncriptada);
         byte[] decValue = c.doFinal(decordedValue);
         String ContraseñaDescifrada = new String(decValue);
         return ContraseñaDescifrada;
