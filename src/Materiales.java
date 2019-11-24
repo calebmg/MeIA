@@ -33,6 +33,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Marcelo Rosales
@@ -52,6 +53,7 @@ public class Materiales extends javax.swing.JFrame {
         initComponents();
          
         jList1.setModel(x);
+        
         if(Archivo.exists()==true)
         {
         ArrayList<NodoMat> LNodos = ListadoNodos("C:\\MEIA\\Materiales.txt","");

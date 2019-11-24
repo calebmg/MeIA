@@ -36,7 +36,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
+import javax.swing.ListCellRenderer;
 /**
  *
  * @author Boris Moran
@@ -56,15 +56,23 @@ public class RepMateriales extends javax.swing.JFrame {
         initComponents();
          
         ListOrdenada.setModel(x);
+        ListOrdenada.setCellRenderer(new ListaRender());
         if(Archivo.exists()==true)
         {
         ArrayList<Materiales.NodoMat> LNodos = mat.ListadoNodos("C:\\MEIA\\Materiales.txt",""); 
         
-        
+        ArrayList<String> LSort = new ArrayList<String>();
         
         for(Materiales.NodoMat item : LNodos)
         {
-            x.addElement(item.Nombre);
+            LSort.add(item.Nombre);
+        }
+        
+        Collections.sort(LSort);
+        
+        for(String item : LSort)
+        {
+            x.addElement(item);
         }
         
         }
