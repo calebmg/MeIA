@@ -1108,9 +1108,63 @@ public final class Admin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
+    public class NodoMat{
+        public int Posicion;
+        public int PIzq;
+        public int PDer;
+        public NodoMat Izquierdo;
+        public NodoMat Derecho;
+        public String Nombre;
+        public String Tipo;
+        public String RFoto;
+        public String Tiempo;
+        public String Usuario;
+        public String Fecha;
+        public String Status;
+        
+        
+        public boolean EsHoja(){
+            if((Izquierdo == null) && (Derecho == null)){return true;}
+            else {return false;}
+        }
+        
+        public void LlenarNodoMat(String Props){
+            String[] Separados = Props.split(",");
+            this.Posicion = Integer.parseInt(Separados[0]);
+            this.PIzq = Integer.parseInt(Separados[1]);
+            this.PDer = Integer.parseInt(Separados[2]);
+            this.Nombre = Separados[3];
+            this.Tipo = Separados[4];
+            this.RFoto = Separados[5];
+            this.Tiempo = Separados[6];
+            this.Usuario = Separados[7];
+            this.Fecha = Separados[8];
+            this.Status = Separados[9];
+        }
+    }
+
     private void BotonDonacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonDonacionesActionPerformed
         // TODO add your handling code here:
         Donaciones H = new Donaciones();
+        Materiales J = new Materiales();
+            ArrayList<String> ListaMateriales = new ArrayList<String>();
+            ArrayList<Materiales.NodoMat> Materiales;
+        
+            
+            Materiales = J.ListadoNodos("C:\\MEIA\\Materiales.txt","");
+            for(Materiales.NodoMat A: Materiales)
+            {
+                ListaMateriales.add(A.Nombre);
+            }
+            for(String X : ListaMateriales){
+                H.ComboMateriales.addItem(X);
+            }
+        
+        H.setVisible(true);
+        this.dispose();
+        
+        /*Donaciones H = new Donaciones();
         ArchivoSecuencialIndexado F = new ArchivoSecuencialIndexado();
         try {
             F.Inicializar(TextUsuario.getText());
@@ -1123,7 +1177,7 @@ public final class Admin extends javax.swing.JFrame {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
         H.setVisible(true);
-        this.dispose();
+        this.dispose();*/
     }//GEN-LAST:event_BotonDonacionesActionPerformed
 
     private void btnRepMaterialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepMaterialesActionPerformed
@@ -1134,7 +1188,9 @@ public final class Admin extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        this.hide();
+        RepoDonacion x = new RepoDonacion();
+        x.setVisible(true);
+        this.dispose();
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
