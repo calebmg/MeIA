@@ -695,7 +695,7 @@ public class Materiales extends javax.swing.JFrame {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
         //Foto
-        String pathFoto = "C:\\MEIA\\Imagenes\\" + origen.getFileName();
+        String pathFoto = "C:\\MEIA\\Fotografia\\" + origen.getFileName();
         NodoMat NMat = new NodoMat();
         NMat.Nombre = TextMaterial.getText();  NMat.Tipo = TextTipo.getText();    NMat.RFoto = pathFoto;
         NMat.Tiempo = TextDeg.getText();    NMat.Usuario = TextoUsuario.getText();
