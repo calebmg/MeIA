@@ -25,8 +25,9 @@ public class ListaRender extends JLabel implements ListCellRenderer{
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         String valor = value.toString();
         setText(valor);
+        String[] Separado = valor.split("|");
         for (Materiales.NodoMat item : Listado) {
-            if (valor.equals(item.Nombre)) {
+            if (valor.equals(item.Nombre + " Tipo: " + item.Tipo + " Tiempo: " + item.Tiempo)) {
                 ImageIcon ima = new ImageIcon(item.RFoto);
                 setIcon(ima);
             }
